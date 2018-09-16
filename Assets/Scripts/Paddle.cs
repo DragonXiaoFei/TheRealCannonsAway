@@ -2,21 +2,39 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Paddle : MonoBehaviour {
+public class Paddle : MonoBehaviour
+{
     [SerializeField] float screenWidth = 16f;
     [SerializeField] float minX = 1.43f;
     [SerializeField] float maxX = 14.6f;
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
+    Ball ball;
+    GameSession gameSession;
+    // Use this for initialization
+    void Start()
+    {
+       ball = FindObjectOfType<Ball>();
+        gameSession = FindObjectOfType<GameSession>();
+    }
 
-        float mousePos = Input.mousePosition.x / Screen.width * screenWidth;
-        mousePos = Mathf.Clamp(mousePos, minX, maxX);
-        Vector2 paddlePos = new Vector2(mousePos, transform.position.y);
+    // Update is called once per frame
+    void Update()
+    {
+
+        Vector2 paddlePos = new Vector2(transform.position.x, transform.position.y);
+        paddlePos.x = Mathf.Clamp(GetXPos(), minX, maxX);
         transform.position = paddlePos;
-	}
+    }
+
+    private float GetXPos()
+    {
+        if (gameSession.IsAutoPlayEnabled())
+        {
+            return ball.transform.position.x;
+
+        }
+        else
+        {
+            return Input.mousePosition.x / Screen.width * screenWidth;
+        }
+    }
 }
